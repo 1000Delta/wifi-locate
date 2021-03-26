@@ -17,7 +17,7 @@ type LocationInfo struct {
 
 type Locate struct{}
 
-func (l *Locate)Locate(scanList ScanList, location *LocationInfo) error {
+func (l *Locate) Locate(scanList ScanList, location *LocationInfo) error {
 
 	location.X = 1
 	location.Y = 1
