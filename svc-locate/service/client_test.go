@@ -88,7 +88,7 @@ func TestNewClient(t *testing.T) {
 }
 
 func setup() {
-	go RunDefaultServer()
+	go RunDefaultServer(Config{LogPath: "../"})
 }
 
 func TestMain(t *testing.M) {
