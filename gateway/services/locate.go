@@ -4,15 +4,13 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	locateSvc "github.com/1000Delta/wifi-locate/svc-locate/service"
 )
 
-type signal struct {
-	Device string `json:"device"`
-	Strength string `json:"strength"`
-}
+var client *locateSvc.Client
 
 type LocateReq struct {
-	Signals []signal `json:"signals"`
+	ScanList locateSvc.ScanList `json:"scanList"`
 }
 
 func NewLocateReq() *LocateReq {
@@ -34,13 +32,25 @@ func NewLocateResp(x, y int) *LocateResp {
 		location{x, y},
 	}
 }
+
+// Locate provide frontend to compute location info
 func Locate(c *gin.Context) {
 	
 	req := NewLocateReq()
 	c.BindJSON(req)
 
-	//TODO rpc
+	// rpc call
+	location := &locateSvc.LocationInfo{}
+	err := client.Locate(req.ScanList, location)
+	if err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
 
-	location := NewLocateResp(0, 0)
-	c.JSON(http.StatusOK, location)
+	locationData := NewLocateResp(location.X, location.Y)
+	c.JSON(http.StatusOK, locationData)
+}
+
+func init() {
+	client = locateSvc.NewClient()
 }
