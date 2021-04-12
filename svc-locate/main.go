@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	service.RunDefaultServer()
+	service.RunDefaultServer(service.Config{})
 }
