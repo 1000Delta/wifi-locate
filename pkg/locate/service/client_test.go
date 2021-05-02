@@ -3,6 +3,8 @@ package service
 import (
 	"net/rpc"
 	"testing"
+
+	"github.com/1000Delta/wifi-locate/pkg/locate"
 )
 
 func TestClient_Close(t *testing.T) {
@@ -36,8 +38,8 @@ func TestClient_Locate(t *testing.T) {
 		conn *rpc.Client
 	}
 	type args struct {
-		scanList ScanList
-		location *LocationInfo
+		scanList locate.APInfoList
+		location *locate.LocationInfo
 	}
 	tests := []struct {
 		name    string
@@ -49,11 +51,11 @@ func TestClient_Locate(t *testing.T) {
 			"default",
 			fields(*NewClient()),
 			args{
-				ScanList{
+				locate.APInfoList{
 					{"a", ""},
 					{"b", ""},
 				},
-				&LocationInfo{},
+				&locate.LocationInfo{},
 			},
 			false,
 		},

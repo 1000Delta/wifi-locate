@@ -3,6 +3,8 @@ package service
 import (
 	"log"
 	"net/rpc"
+
+	"github.com/1000Delta/wifi-locate/pkg/locate"
 )
 
 var (
@@ -19,7 +21,7 @@ func (c Client) Close() error {
 }
 
 // Locate your location by the wifi scan list
-func (c Client) Locate(scanList ScanList, location *LocationInfo) error {
+func (c Client) Locate(scanList locate.APInfoList, location *locate.LocationInfo) error {
 	err := c.conn.Call("Locate.Locate", scanList, location)
 	if err != nil {
 		return err

@@ -2,23 +2,25 @@ package service
 
 import (
 	"testing"
+
+	"github.com/1000Delta/wifi-locate/pkg/locate"
 )
 
 func TestLocate(t *testing.T) {
 	testCases := []struct {
 		desc   string
-		input  ScanList
-		output *LocationInfo
+		input  locate.APInfoList
+		output *locate.LocationInfo
 	}{
 		{
 			desc: "default",
-			input: ScanList{
+			input: locate.APInfoList{
 				{
 					BSSID: "Test",
 					RSSI:  "-95dbm",
 				},
 			},
-			output: &LocationInfo{1, 1},
+			output: &locate.LocationInfo{1, 1},
 		},
 	}
 
