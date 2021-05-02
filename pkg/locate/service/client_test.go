@@ -38,7 +38,7 @@ func TestClient_Locate(t *testing.T) {
 		conn *rpc.Client
 	}
 	type args struct {
-		scanList locate.APInfoList
+		scanList []*locate.APInfo
 		location *locate.LocationInfo
 	}
 	tests := []struct {
@@ -51,7 +51,7 @@ func TestClient_Locate(t *testing.T) {
 			"default",
 			fields(*NewClient()),
 			args{
-				locate.APInfoList{
+				[]*locate.APInfo{
 					{"a", ""},
 					{"b", ""},
 				},

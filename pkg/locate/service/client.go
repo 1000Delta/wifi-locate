@@ -21,7 +21,7 @@ func (c Client) Close() error {
 }
 
 // Locate your location by the wifi scan list
-func (c Client) Locate(scanList locate.APInfoList, location *locate.LocationInfo) error {
+func (c Client) Locate(scanList []*locate.APInfo, location *locate.LocationInfo) error {
 	err := c.conn.Call("Locate.Locate", scanList, location)
 	if err != nil {
 		return err

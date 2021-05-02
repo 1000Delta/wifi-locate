@@ -9,7 +9,7 @@ import (
 type Locate struct{}
 
 // Locate compute the location of report WLAN scanList.
-func (l *Locate) Locate(scanList locate.APInfoList, location *locate.LocationInfo) error {
+func (l *Locate) Locate(scanList []*locate.APInfo, location *locate.LocationInfo) error {
 
 	location.X = 1
 	location.Y = 1

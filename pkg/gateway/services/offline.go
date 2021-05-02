@@ -12,7 +12,7 @@ import (
 // of the location.
 type ap4LocationReq struct {
 	Location   locate.LocationInfo `json:"location"`
-	APInfoList locate.APInfoList
+	APInfoList []*locate.APInfo
 }
 
 type ap4LocationResp struct {

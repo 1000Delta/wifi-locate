@@ -9,12 +9,12 @@ import (
 func TestLocate(t *testing.T) {
 	testCases := []struct {
 		desc   string
-		input  locate.APInfoList
+		input  []*locate.APInfo
 		output *locate.LocationInfo
 	}{
 		{
 			desc: "default",
-			input: locate.APInfoList{
+			input: []*locate.APInfo{
 				{
 					BSSID: "Test",
 					RSSI:  "-95dbm",

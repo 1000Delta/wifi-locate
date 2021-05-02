@@ -11,7 +11,7 @@ import (
 var client *service.Client
 
 type LocateReq struct {
-	ScanList locate.APInfoList `json:"scanList"`
+	ScanList []*locate.APInfo `json:"scanList"`
 }
 
 func NewLocateReq() *LocateReq {
