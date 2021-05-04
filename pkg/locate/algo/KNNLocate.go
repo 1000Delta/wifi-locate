@@ -7,23 +7,18 @@ import (
 	"github.com/1000Delta/wifi-locate/pkg/locate"
 )
 
-// APVector define a general mode to get vector value
-type APVector interface {
-	GetVecVal(dimension int) int64
-	GetLocation() (float64, float64)
-}
-
 type KNNLocator struct {
 	k int // k nums target to locate
 }
 
-func NewKNNLocator(k int) *KNNLocator {
+func NewKNNLocator(k int) locate.Locator {
 	return &KNNLocator{k: k}
 }
 
-func (cfg KNNLocator) Locate(scanVec APVector, vecListDB []APVector) locate.LocationInfo {
+// Locate implement locate algo for KNN
+func (cfg KNNLocator) Locate(scanVec locate.APVector, vecListDB []locate.APVector) locate.LocationInfo {
 	diffList := make(apDiffList, len(vecListDB))
-	
+
 	// 计算欧式距离
 	for i, baseVec := range vecListDB {
 		diffList[i] = getDiff(baseVec, scanVec)
@@ -39,10 +34,10 @@ func (cfg KNNLocator) Locate(scanVec APVector, vecListDB []APVector) locate.Loca
 type apDiff struct {
 	// Euclidean Distance
 	EuDist  float64
-	BaseVec APVector
+	BaseVec locate.APVector
 }
 
-func getDiff(baseVec, dbVec APVector) *apDiff {
+func getDiff(baseVec, dbVec locate.APVector) *apDiff {
 	euDist := math.Sqrt(
 		math.Pow(float64(baseVec.GetVecVal(0)-dbVec.GetVecVal(0)), 2) +
 			math.Pow(float64(baseVec.GetVecVal(1)-dbVec.GetVecVal(1)), 2) +
@@ -73,5 +68,5 @@ func getAvgLocation(diffList apDiffList) (float64, float64) {
 
 	// TODO 确认结果正确性，论文中多计算了一个欧氏距离
 
-	return xall/countF , yall/countF
+	return xall / countF, yall / countF
 }
