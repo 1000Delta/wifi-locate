@@ -11,6 +11,7 @@ import (
 var client *service.Client
 
 type LocateReq struct {
+	MapID    uint             `json:"mapID"`
 	ScanList []*locate.APInfo `json:"scanList"`
 }
 
@@ -23,13 +24,10 @@ type LocateResp struct {
 	Data locate.LocationInfo `json:"data,omitempty"`
 }
 
-func NewLocateResp(x, y int) *LocateResp {
+func NewLocateResp(locInfo *locate.LocationInfo) *LocateResp {
 	return &LocateResp{
 		Resp(0, ""),
-		locate.LocationInfo{
-			X: x,
-			Y: y,
-		},
+		*locInfo,
 	}
 }
 
@@ -40,14 +38,18 @@ func Locate(c *gin.Context) {
 	c.BindJSON(req)
 
 	// rpc call
+	locateReq := service.LocateReq{
+		MapID:  req.MapID,
+		APList: req.ScanList,
+	}
 	location := &locate.LocationInfo{}
-	err := client.Locate(req.ScanList, location)
+	err := client.Locate(locateReq, location)
 	if err != nil {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 
-	locationData := NewLocateResp(location.X, location.Y)
+	locationData := NewLocateResp(location)
 	c.JSON(http.StatusOK, locationData)
 }
 
