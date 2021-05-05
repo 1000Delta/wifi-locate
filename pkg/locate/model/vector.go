@@ -1,6 +1,8 @@
 package model
 
 import (
+	"log"
+
 	"github.com/1000Delta/wifi-locate/pkg/locate"
 	"gorm.io/gorm"
 )
@@ -21,8 +23,24 @@ func (APVector) TableName() string {
 	return "ap_vector"
 }
 
+// Add the vector of map into DB
+func (v APVector) Add() error {
+	if ok, err := MapExist(v.MapID); err != nil {
+		return err
+	} else if !ok {
+		// map not found
+		log.Printf("%v, mapID = %d", gorm.ErrRecordNotFound, v.MapID)
+		return gorm.ErrRecordNotFound
+	}
+	if err := db.Create(&v).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func GetVecByMap(m *LocationMap) (vecList []locate.APVector, err error) {
-	err = db.Where(&APVector{MapID: m.ID}).Find(&vecList).Error 
+	vecQuery := &APVector{MapID: m.ID}
+	err = db.Model(vecQuery).Where(vecQuery).Find(&vecList).Error 
 	// TODO 检验跨函数传递 err 是否仍为 nil
 	// TODO 检验类型是否可以互相转换
 	// no record is not a error
