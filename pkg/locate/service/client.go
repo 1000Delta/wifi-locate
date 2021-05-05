@@ -49,7 +49,7 @@ func (c Client) CreateMap(req CreateMapReq, resp *CreateMapResp) error {
 func NewClient() *Client {
 	client, err := rpc.DialHTTP("tcp", listenAddress)
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err) // 此处不能中止，否则会影响外部服务
 	}
 
 	return &Client{client}
