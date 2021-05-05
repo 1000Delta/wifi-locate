@@ -15,4 +15,7 @@ func RegisterRouter(e *gin.Engine) {
 
 	// locate
 	e.POST("/locate", services.Locate)
+
+	// test
+	e.POST("/echo", services.Echo)
 }
