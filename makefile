@@ -1,18 +1,16 @@
-.PHONY: gateway
-gateway:
-	cd gateway && go run . &
+SVC_DIR:=cmd
+BIN_DIR:=bin
+SVC_LIST:=$$(for f in $$(ls ${SVC_DIR}); do echo $$f; done)
 
-.PHONY: locate
-locate:
-	cd svc-locate && go run . &
-
-SERVICE:=$$(for f in $$(ls); do if [ -d $$f ]; then echo $$f; fi; done)
+build:
+	@for svc in $(SVC_LIST); do echo 'build' $$svc; go build -o ./${BIN_DIR}/$$svc ./${SVC_DIR}/$$svc; done
 
 .PHONY: close
 close:
-	@for svc in $(SERVICE); do echo 'close' $$svc; kill $$(ps -A | grep $$svc | awk '{print $$1}'); done
+	@for svc in $(SVC_LIST); do echo 'close' $$svc; kill $$(ps -A | grep $$svc | awk '{print $$1}'); done
 
 list:
-	echo ${SERVICE}
+	@echo ${SVC_LIST}
 
-run: gateway locate
+run:
+	docker-compose up
