@@ -6,11 +6,14 @@ import (
 	"net/rpc"
 	"os"
 	"strings"
+
+	"github.com/1000Delta/wifi-locate/pkg/locate/model"
 )
 
 // Config let you costom your service
 type Config struct {
 	LogPath string
+	TargetAP []string
 }
 
 // RunDefaultServer help you run default rpc server for the service
@@ -20,20 +23,25 @@ func RunDefaultServer(cfg Config) {
 	} else {
 		initLogger("./")
 	}
-	// rpc
-	rpc.Register(&Locate{})
+
+	// init module
+	model.InitDB(log.Default())
+	InitAPConvertor(cfg.TargetAP)
+
+	// init rpc
+	rpc.Register(&LocateService{})
 	rpc.HandleHTTP()
 
-	// server
+	// init server
 	http.ListenAndServe(":52201", nil)
 }
 
 func initLogger(path string) {
-	logger, err := os.OpenFile(path+"run.log", os.O_WRONLY|os.O_APPEND|os.O_CREATE, os.ModeAppend|os.ModePerm)
+	logOutput, err := os.OpenFile(path+"run.log", os.O_WRONLY|os.O_APPEND|os.O_CREATE, os.ModeAppend|os.ModePerm)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// redirect log output to log file
-	log.SetOutput(logger)
+	log.SetOutput(logOutput)
 }
