@@ -21,9 +21,24 @@ func (c Client) Close() error {
 }
 
 // Locate your location by the wifi scan list
-func (c Client) Locate(scanList []*locate.APInfo, location *locate.LocationInfo) error {
-	err := c.conn.Call("Locate.Locate", scanList, location)
-	if err != nil {
+func (c Client) Locate(req LocateReq, resp *locate.LocationInfo) error {
+	if err := c.conn.Call("Locate.Locate", req, resp); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c Client) Collect(req CollectReq, resp *CollectResp) error {
+	if err := c.conn.Call("Locate.Collect", req, resp); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c Client) CreateMap(req CreateMapReq, resp *CreateMapResp) error {
+	if err := c.conn.Call("Locate.CreateMap", req, resp); err != nil {
 		return err
 	}
 

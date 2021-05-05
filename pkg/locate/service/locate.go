@@ -23,15 +23,15 @@ func NewLocateService(locator locate.Locator) *LocateService {
 }
 
 type LocateReq struct {
-	mapID  uint
-	apList []*locate.APInfo
+	MapID  uint
+	APList []*locate.APInfo
 }
 
 // Locate compute the location of report WLAN scanList.
 func (l *LocateService) Locate(req LocateReq, location *locate.LocationInfo) error {
 
 	// 转换请求参数到向量
-	vec := GetMapVector(req.mapID, req.apList)
+	vec := GetMapVector(req.MapID, req.APList)
 	// TODO 实现定位算法调用计算结果流程
 
 	// 查找定位 map
