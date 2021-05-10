@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  db:
+    container_name: ${service_name}-db
+    image: mysql:5.7
+    networks:
+      - wifi-locate
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+
+  locate:
+    container_name: ${service_name}-locate
+    build: .
+    networks:
+      - wifi-locate
+
+  gateway:
+    container_name: ${service_name}-gateway
+    build:
+      context: .
+      args: 
+        target: gateway
+    networks:
+      - wifi-locate
+
+networks:
+  wifi-locate:
