@@ -1,1 +1,4 @@
-port: 8080
+gin:
+  # mode: debug
+  mode: release
+  port: 8080

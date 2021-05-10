@@ -31,12 +31,21 @@ var serveCmd = &cobra.Command{
 	Long: `
 Run gateway service, support wifi-locate request.`,
 	Run: func(cmd *cobra.Command, args []string) {
+	
+		mode := viper.GetString("gin.mode")
+		switch mode {
+		case gin.DebugMode, gin.ReleaseMode:
+			gin.SetMode(mode)
+		default:
+			cobra.CheckErr("config gin.mode is not a valid value: [debug, release]")
+		}
+
 		// init server
 		e := gin.Default()
 
 		gateway.RegisterRouter(e)
 
-		port := viper.GetInt("port")
+		port := viper.GetInt("gin.port")
 
 		e.Run(fmt.Sprintf(":%d", port))
 	},
