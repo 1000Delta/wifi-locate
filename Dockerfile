@@ -1,18 +1,17 @@
 # BUILD STAGE
 # ---
-FROM golang:1.16-alpine as builder
+FROM golang:alpine as builder
 
 WORKDIR /go/src/github.com/1000Delta/wifi-locate
-
-COPY . .
 
 RUN apk --no-cache add git && \
 apk --no-cache add make
 
-# 减少重复构建依赖安装时间
-RUN go env -w GOPROXY=goproxy.io,direct && go mod tidy
+COPY . .
 
-RUN make build
+# 减少重复构建依赖安装时间
+RUN go env -w GOPROXY=goproxy.io,direct && \
+make build
 
 # GATEWAY IMAGE
 # ---
@@ -20,15 +19,19 @@ FROM alpine:latest as gateway
 
 WORKDIR /app
 
-ENV BUILD_DIR=cmd/gateway
+RUN apk add --no-cache ca-certificates
+
+# 多 APP 修改环境变量即可
+ENV APP_NAME=gateway
+ENV CMD_DIR=cmd/${APP_NAME}
 ENV CONFIG_DIR=config
 ENV CONFIG_FILE=./config.yml
 
-COPY --from=builder /go/src/github.com/1000Delta/wifi-locate/main .
-COPY --from=builder /go/src/github.com/1000Delta/wifi-locate/$BUILD_DIR/config .
+COPY --from=builder /go/src/github.com/1000Delta/wifi-locate/bin/${APP_NAME} .
+COPY --from=builder /go/src/github.com/1000Delta/wifi-locate/$CMD_DIR/config .
 
 # CMD [ "ls", "-a" ]
-CMD [ "./main", "serve", "--config ${CONFIG_FILE}" ]
+CMD [ "sh", "-c", "./${APP_NAME} serve --config ${CONFIG_FILE}" ]
 
 #
 # LOCATE IMAGE
