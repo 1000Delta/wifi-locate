@@ -5,13 +5,16 @@ FROM golang:alpine as builder
 WORKDIR /go/src/github.com/1000Delta/wifi-locate
 
 RUN apk --no-cache add git && \
-apk --no-cache add make
+  apk --no-cache add make
 
 COPY . .
 
 # 减少重复构建依赖安装时间
 RUN go env -w GOPROXY=goproxy.io,direct && \
-make build
+  go env -w CGO_ENABLED=0 && \
+  go env -w GOARCH=amd64 && \
+  go env -w GOOS=linux && \
+  make build
 
 # GATEWAY IMAGE
 # ---
