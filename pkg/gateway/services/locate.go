@@ -54,5 +54,5 @@ func Locate(c *gin.Context) {
 }
 
 func init() {
-	client = service.NewClient()
+	client = service.DefaultClient()
 }
