@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 
 services:
   db:
@@ -8,20 +8,21 @@ services:
       - wifi-locate
     environment:
       MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${db_name}
 
   locate:
     container_name: ${service_name}-locate
     build: .
     networks:
       - wifi-locate
-    depends_on: 
+    depends_on:
       - db
 
   gateway:
     container_name: ${service_name}-gateway
     build:
       context: .
-      args: 
+      args:
         target: gateway
     networks:
       - wifi-locate
