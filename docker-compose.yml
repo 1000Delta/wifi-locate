@@ -12,7 +12,9 @@ services:
 
   locate:
     container_name: ${service_name}-locate
-    build: .
+    build:
+      context: .
+      target: locate
     networks:
       - wifi-locate
     depends_on:
@@ -22,8 +24,7 @@ services:
     container_name: ${service_name}-gateway
     build:
       context: .
-      args:
-        target: gateway
+      target: gateway
     networks:
       - wifi-locate
 
