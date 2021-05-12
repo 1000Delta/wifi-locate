@@ -14,6 +14,8 @@ services:
     build: .
     networks:
       - wifi-locate
+    depends_on: 
+      - db
 
   gateway:
     container_name: ${service_name}-gateway

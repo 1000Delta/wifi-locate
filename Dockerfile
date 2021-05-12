@@ -16,6 +16,7 @@ RUN go env -w GOPROXY=goproxy.io,direct && \
   go env -w GOOS=linux && \
   make build
 
+#
 # GATEWAY IMAGE
 # ---
 FROM alpine:latest as gateway
@@ -38,4 +39,22 @@ CMD [ "sh", "-c", "./${APP_NAME} serve --config ${CONFIG_FILE}" ]
 
 #
 # LOCATE IMAGE
+# ---
+FROM alpine:latest as locate
+
+WORKDIR /app
+
+RUN apk add --no-cache ca-certificates
+
+# 多 APP 修改环境变量即可
+ENV APP_NAME=locate
+ENV CMD_DIR=cmd/${APP_NAME}
+ENV CONFIG_DIR=config
+ENV CONFIG_FILE=./config.yml
+
+COPY --from=builder /go/src/github.com/1000Delta/wifi-locate/bin/${APP_NAME} .
+COPY --from=builder /go/src/github.com/1000Delta/wifi-locate/$CMD_DIR/config .
+
+# CMD [ "ls", "-a" ]
+CMD [ "sh", "-c", "./${APP_NAME} serve --config ${CONFIG_FILE}" ]
 
