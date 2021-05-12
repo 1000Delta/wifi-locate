@@ -3,12 +3,18 @@ package service
 import (
 	"log"
 	"net/rpc"
+	"time"
 
+	"github.com/1000Delta/wifi-locate/pkg/common/utils"
 	"github.com/1000Delta/wifi-locate/pkg/locate"
 )
 
-var (
-	listenAddress = ":52201"
+const (
+	initReconnectDelay time.Duration = 1
+	maxReconnectDelay  time.Duration = 4
+	connectTimeout     time.Duration = 20
+
+	listenAddress = "wifi-locate-locate:52201"
 )
 
 type Client struct {
@@ -45,12 +51,48 @@ func (c Client) CreateMap(req CreateMapReq, resp *CreateMapResp) error {
 	return nil
 }
 
-// NewClient to process rpc call
-func NewClient() *Client {
-	client, err := rpc.DialHTTP("tcp", listenAddress)
+// DefaultClient to process rpc call
+func DefaultClient() *Client {
+	var client *Client
+	// 超时时间内尝试建立连接
+	err := utils.CallUntilNoErrorWithTimeout(
+		func(currentDelay time.Duration) error {
+			c, err := rpc.DialHTTP("tcp", listenAddress)
+			if err != nil {
+				log.Print(err) // 此处不能中止，否则会影响外部服务
+				return err
+			}
+			client = &Client{c}
+			return nil
+		},
+		initReconnectDelay, maxReconnectDelay, connectTimeout,
+	)
 	if err != nil {
-		log.Print(err) // 此处不能中止，否则会影响外部服务
+		return nil
 	}
 
-	return &Client{client}
+	return client
+}
+
+// DefaultClient to process rpc call
+func NewClient(address string) *Client {
+	var client *Client
+	// 超时时间内尝试建立连接
+	err := utils.CallUntilNoErrorWithTimeout(
+		func(currentDelay time.Duration) error {
+			c, err := rpc.DialHTTP("tcp", address)
+			if err != nil {
+				log.Print(err) // 此处不能中止，否则会影响外部服务
+				return err
+			}
+			client = &Client{c}
+			return nil
+		},
+		initReconnectDelay, maxReconnectDelay, connectTimeout,
+	)
+	if err != nil {
+		return nil
+	}
+
+	return client
 }
