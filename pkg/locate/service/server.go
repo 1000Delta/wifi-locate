@@ -12,7 +12,7 @@ import (
 
 // Config let you costom your service
 type Config struct {
-	LogPath string
+	LogPath  string
 	TargetAP []string
 }
 
@@ -21,7 +21,7 @@ func RunDefaultServer(cfg Config) {
 	if logPath := strings.TrimSpace(cfg.LogPath); logPath != "" {
 		initLogger(logPath)
 	} else {
-		initLogger("./")
+		initLogger("")
 	}
 
 	// init module
@@ -37,6 +37,12 @@ func RunDefaultServer(cfg Config) {
 }
 
 func initLogger(path string) {
+	// 默认使用 stdout
+	if path == "" {
+		log.SetOutput(os.Stdout)
+		return
+	}
+
 	logOutput, err := os.OpenFile(path+"run.log", os.O_WRONLY|os.O_APPEND|os.O_CREATE, os.ModeAppend|os.ModePerm)
 	if err != nil {
 		log.Fatal(err)
