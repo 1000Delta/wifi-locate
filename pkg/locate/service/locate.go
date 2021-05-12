@@ -66,6 +66,9 @@ func (l *LocateService) Locate(req LocateReq, location *locate.LocationInfo) err
 var apConvertor map[string]func(*model.APVector, int64)
 
 func InitAPConvertor(markAP []string) {
+	// 初始化map
+	apConvertor = make(map[string]func(*model.APVector, int64), len(markAP))
+
 	if len(markAP) < 2 {
 		log.Fatalf("invalid markAP numbers, markAP = %v", markAP)
 	}
