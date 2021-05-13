@@ -1,7 +1,9 @@
 package services
 
 import (
+	"log"
 	"net/http"
+	"net/rpc"
 
 	"github.com/1000Delta/wifi-locate/pkg/locate"
 	"github.com/1000Delta/wifi-locate/pkg/locate/service"
@@ -42,10 +44,14 @@ func Locate(c *gin.Context) {
 		MapID:  req.MapID,
 		APList: req.ScanList,
 	}
-	location := &locate.LocationInfo{}
+	var location *locate.LocationInfo
 	err := client.Locate(locateReq, location)
 	if err != nil {
-		c.AbortWithStatus(http.StatusInternalServerError)
+		// rpc 断开链接需要重启
+		if err == rpc.ErrShutdown {
+			client = service.DefaultClient()
+		}
+		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
@@ -55,4 +61,7 @@ func Locate(c *gin.Context) {
 
 func init() {
 	client = service.DefaultClient()
+	if client != nil {
+		log.Println("connect locate service successed.")
+	}
 }
