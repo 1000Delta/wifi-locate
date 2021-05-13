@@ -17,8 +17,8 @@ func RegisterRouter(e *gin.Engine) {
 	e.POST("/map/add", services.AddMapHandler)
 
 	// locate
-	e.POST("/locate", services.Locate)
+	e.POST("/locate", services.LocateHandler)
 
 	// test
-	e.POST("/echo", services.Echo)
+	e.POST("/echo", services.EchoHandler)
 }

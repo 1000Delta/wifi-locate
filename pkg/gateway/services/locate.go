@@ -33,8 +33,8 @@ func NewLocateResp(locInfo *locate.LocationInfo) *LocateResp {
 	}
 }
 
-// Locate provide frontend to compute location info
-func Locate(c *gin.Context) {
+// LocateHandler provide frontend to compute location info
+func LocateHandler(c *gin.Context) {
 
 	req := NewLocateReq()
 	c.BindJSON(req)
