@@ -34,7 +34,7 @@ func CallUntilNoError(callback func(currentDelay time.Duration) error, initDelay
 func CallUntilNoErrorWithTimeout(
 	callback func(currentDelay time.Duration) error,
 	initDelay time.Duration, maxDelay time.Duration, timeout time.Duration) error {
-	outTicker := time.NewTicker(timeout)
+	outTicker := time.NewTicker(timeout * time.Second)
 	doneChan := make(chan struct{})
 
 	go CallUntilNoError(func(currentDelay time.Duration) error {
