@@ -42,6 +42,7 @@ type addMapReq struct {
 
 type addMapResp struct {
 	baseResp
+	ID uint `json:"id"`
 }
 
 func AddMapHandler(ctx *gin.Context) {
@@ -64,7 +65,7 @@ func AddMapHandler(ctx *gin.Context) {
 		return
 	}
 
-	resp := &addMapResp{}
+	resp := &addMapResp{ID: rpcResp.MapID}
 	resp.Code = 0
 
 	ctx.JSON(http.StatusOK, resp)

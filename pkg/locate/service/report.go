@@ -32,7 +32,7 @@ type CreateMapReq struct {
 }
 
 type CreateMapResp struct {
-	mapID uint
+	MapID uint
 }
 
 // CreateMap
@@ -48,7 +48,7 @@ func (LocateService) CreateMap(req CreateMapReq, resp *CreateMapResp) error {
 		return err
 	}
 
-	*resp = CreateMapResp{mapID: m.ID}
+	*resp = CreateMapResp{MapID: m.ID}
 
 	return nil
 }
