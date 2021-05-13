@@ -45,18 +45,28 @@ func Locate(c *gin.Context) {
 		APList: req.ScanList,
 	}
 	var location *locate.LocationInfo
-	err := client.Locate(locateReq, location)
+	cl, err := getClient()
 	if err != nil {
-		// rpc 断开链接需要重启
-		if err == rpc.ErrShutdown {
-			client = service.DefaultClient()
-		}
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+	if err := cl.Locate(locateReq, location); err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
 	locationData := NewLocateResp(location)
 	c.JSON(http.StatusOK, locationData)
+}
+
+func getClient() (*service.Client, error) {
+	// 添加重连，异步执行
+	if err := client.Beat(); err == rpc.ErrShutdown {
+		go func() { client = service.DefaultClient() }()
+		return nil, err
+	}
+
+	return client, nil
 }
 
 func init() {
