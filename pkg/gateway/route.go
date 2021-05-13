@@ -13,6 +13,9 @@ func RegisterRouter(e *gin.Engine) {
 		c.String(http.StatusOK, "Hello WIFI Location")
 	})
 
+	// offline
+	e.POST("/map/add", services.AddMapHandler)
+
 	// locate
 	e.POST("/locate", services.Locate)
 

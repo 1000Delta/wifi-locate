@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/1000Delta/wifi-locate/pkg/locate"
+	"github.com/1000Delta/wifi-locate/pkg/locate/service"
 	"github.com/gin-gonic/gin"
 )
 
@@ -32,5 +33,39 @@ func ReportAP4Location(ctx *gin.Context) {
 			Code: 0,
 		},
 	}
+	ctx.JSON(http.StatusOK, resp)
+}
+
+type addMapReq struct {
+	Name string `json:"name"`
+}
+
+type addMapResp struct {
+	baseResp
+}
+
+func AddMapHandler(ctx *gin.Context) {
+	req := new(addMapReq)
+	ctx.BindJSON(req)
+
+	rpcReq := service.CreateMapReq{
+		Name: req.Name,
+	}
+
+	var rpcResp *service.CreateMapResp
+
+	cl, err := getClient()
+	if err != nil {
+		ctx.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+	if err := cl.CreateMap(rpcReq, rpcResp); err != nil {
+		ctx.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	resp := &addMapResp{}
+	resp.Code = 0
+
 	ctx.JSON(http.StatusOK, resp)
 }
