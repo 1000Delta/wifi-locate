@@ -32,25 +32,26 @@ func (l *LocateService) Locate(req LocateReq, location *locate.LocationInfo) err
 
 	// 转换请求参数到向量
 	vec := GetMapVector(req.MapID, req.APList)
-	// TODO 实现定位算法调用计算结果流程
 
 	// 查找定位 map
 	tgtMap, err := model.GetMap(vec.MapID)
 	if err != nil {
+		log.Printf("get map error, msg = %v", err)
 		return err
 	}
 	if tgtMap == nil {
-		log.Printf("mapID = %d", vec.MapID)
+		log.Printf("map not find, mapID = %d", vec.MapID)
 		return ErrNoRecord
 	}
 
 	// 获取 map 离线采集的向量
 	dbVecs, err := model.GetVecByMap(tgtMap)
 	if err != nil {
+		log.Printf("map vectors find error, msg = %v", err)
 		return err
 	}
 	if len(dbVecs) == 0 {
-		log.Printf("mapID = %d", tgtMap.ID)
+		log.Printf("map vectors not find, mapID = %d", tgtMap.ID)
 		return ErrNoRecord
 	}
 
