@@ -1,6 +1,8 @@
 package service
 
 import (
+	"log"
+
 	"github.com/1000Delta/wifi-locate/pkg/locate"
 	"github.com/1000Delta/wifi-locate/pkg/locate/model"
 )
@@ -40,6 +42,7 @@ func (LocateService) CreateMap(req CreateMapReq, resp *CreateMapResp) error {
 		Height: req.Height,
 	}
 	if err := m.Add(); err != nil {
+		log.Printf("add map error, msg = %v", err)
 		return err
 	}
 
