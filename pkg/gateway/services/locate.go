@@ -44,7 +44,7 @@ func LocateHandler(c *gin.Context) {
 		MapID:  req.MapID,
 		APList: req.ScanList,
 	}
-	var location *locate.LocationInfo
+	location := &locate.LocationInfo{}
 	cl, err := getClient()
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)

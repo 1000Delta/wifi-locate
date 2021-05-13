@@ -53,7 +53,7 @@ func AddMapHandler(ctx *gin.Context) {
 		Name: req.Name,
 	}
 
-	var rpcResp *service.CreateMapResp
+	rpcResp := &service.CreateMapResp{}
 
 	cl, err := getClient()
 	if err != nil {
