@@ -26,6 +26,14 @@ func (c Client) Close() error {
 	return c.conn.Close()
 }
 
+func (c Client) Beat() error {
+	if err := c.conn.Call("LocateService.Beat", struct{}{}, struct{}{}); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // Locate your location by the wifi scan list
 func (c Client) Locate(req LocateReq, resp *locate.LocationInfo) error {
 	if err := c.conn.Call("LocateService.Locate", req, resp); err != nil {
