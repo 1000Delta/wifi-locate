@@ -34,7 +34,7 @@ func MapExist(mapID uint) (bool, error) {
 // 
 // if map not existed, return map will be nil.
 func GetMap(mapID uint) (*LocationMap, error) {
-	var m *LocationMap
+	m := new(LocationMap)
 	if err := db.Where("id = ?", mapID).First(m).Error; err != nil {
 		// no record not means error
 		if err == gorm.ErrRecordNotFound {
