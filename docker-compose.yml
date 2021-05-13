@@ -27,6 +27,8 @@ services:
       target: gateway
     networks:
       - wifi-locate
+    ports: 
+      - 8080:8080
 
 networks:
   wifi-locate:
