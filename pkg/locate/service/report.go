@@ -8,16 +8,22 @@ import (
 )
 
 type CollectReq struct {
-	MapID  int
-	APList []*locate.APInfo
+	MapID    uint
+	APList   []*locate.APInfo
+	Location locate.LocationInfo
 }
 
 type CollectResp struct{}
 
 // Collect APInfo prepare to locate device online
 func (LocateService) Collect(req CollectReq, resp *CollectResp) error {
-	vec := GetMapVector(uint(req.MapID), req.APList)
+	// 转换向量
+	vec := GetMapVector(req.MapID, req.APList)
+	// 记录坐标
+	vec.LocX, vec.LocY = req.Location.X, req.Location.Y
+
 	if err := vec.Add(); err != nil {
+		log.Printf("add vector error, msg = %v", err)
 		return err
 	}
 
