@@ -33,6 +33,7 @@ func (v APVector) Add() error {
 		return gorm.ErrRecordNotFound
 	}
 	if err := db.Create(&v).Error; err != nil {
+		log.Printf("insert map vector error, value = %v, err = %v", v, err)
 		return err
 	}
 	return nil

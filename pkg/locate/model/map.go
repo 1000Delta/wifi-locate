@@ -1,6 +1,10 @@
 package model
 
-import "gorm.io/gorm"
+import (
+	"log"
+
+	"gorm.io/gorm"
+)
 
 type LocationMap struct {
 	gorm.Model
@@ -15,23 +19,25 @@ func (m LocationMap) Add() error {
 	if err := db.Create(&m).Error; err != nil {
 		return err
 	}
+	log.Printf("map: %v", m)
 	return nil
 }
 
 // MapExist use count() to check if the map exist.
-// 
+//
 // if count > 0, return true,
 // if error, return false and error.
 func MapExist(mapID uint) (bool, error) {
 	var mapCount int64
-	if err := db.Where("id = ?", mapID).Count(&mapCount).Error; err != nil {
+	if err := db.Model(&LocationMap{}).Where("id = ?", mapID).Count(&mapCount).Error; err != nil {
+		log.Printf("check map exist error, err = %v", err)
 		return false, err
 	}
 	return mapCount > 0, nil
 }
 
 // GetMap return the map info of mapID in DB,
-// 
+//
 // if map not existed, return map will be nil.
 func GetMap(mapID uint) (*LocationMap, error) {
 	m := new(LocationMap)
