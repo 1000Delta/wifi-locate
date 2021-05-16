@@ -45,6 +45,7 @@ func getDiff(baseVec, dbVec locate.APVector) *apDiff {
 			math.Pow(float64(baseVec.GetVecVal(3)-dbVec.GetVecVal(3)), 2),
 	)
 	return &apDiff{
+		BaseVec: dbVec,
 		EuDist: euDist,
 	}
 }
