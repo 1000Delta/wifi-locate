@@ -40,6 +40,8 @@ func initLogger(path string) {
 	// 默认使用 stdout
 	if path == "" {
 		log.SetOutput(os.Stdout)
+		log.Printf("logoutput: stdout")
+
 		return
 	}
 
@@ -50,4 +52,6 @@ func initLogger(path string) {
 
 	// redirect log output to log file
 	log.SetOutput(logOutput)
+
+	log.Printf("logfile: %v", path+"run.log")
 }
