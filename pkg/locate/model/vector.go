@@ -3,7 +3,6 @@ package model
 import (
 	"log"
 
-	"github.com/1000Delta/wifi-locate/pkg/locate"
 	"gorm.io/gorm"
 )
 
@@ -39,9 +38,9 @@ func (v APVector) Add() error {
 	return nil
 }
 
-func GetVecByMap(m *LocationMap) (vecList []locate.APVector, err error) {
+func GetVecByMap(m *LocationMap) (vecList []APVector, err error) {
 	vecQuery := &APVector{MapID: m.ID}
-	err = db.Model(vecQuery).Where(vecQuery).Find(&vecList).Error 
+	err = db.Model(vecQuery).Where(vecQuery).Find(&vecList).Error
 	// TODO 检验跨函数传递 err 是否仍为 nil
 	// TODO 检验类型是否可以互相转换
 	// no record is not a error

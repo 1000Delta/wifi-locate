@@ -55,8 +55,15 @@ func (l *LocateService) Locate(req LocateReq, location *locate.LocationInfo) err
 		return ErrNoRecord
 	}
 
+	algoVecs := make([]locate.APVector, len(dbVecs))
+
+	// 转换到算法使用的对象
+	for i, vec := range dbVecs {
+		algoVecs[i] = &vec
+	}
+
 	// 调用定位算法，默认使用 KNN, k=4
-	*location = l.locator.Locate(vec, dbVecs)
+	*location = l.locator.Locate(vec, algoVecs)
 
 	log.Printf("req: %v, output: %v\n", req, location)
 
