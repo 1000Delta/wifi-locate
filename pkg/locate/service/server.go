@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/1000Delta/wifi-locate/pkg/locate/algo"
 	"github.com/1000Delta/wifi-locate/pkg/locate/model"
 )
 
@@ -29,7 +30,7 @@ func RunDefaultServer(cfg Config) {
 	InitAPConvertor(cfg.TargetAP)
 
 	// init rpc
-	rpc.Register(&LocateService{})
+	rpc.Register(NewLocateService(algo.NewKNNLocator(4)))
 	rpc.HandleHTTP()
 
 	// init server
