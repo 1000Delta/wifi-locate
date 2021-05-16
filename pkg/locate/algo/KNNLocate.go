@@ -21,7 +21,7 @@ func (cfg KNNLocator) Locate(scanVec locate.APVector, vecListDB []locate.APVecto
 
 	// 计算欧式距离
 	for i, baseVec := range vecListDB {
-		diffList[i] = getDiff(baseVec, scanVec)
+		diffList[i] = getDiff(scanVec, baseVec)
 	}
 	sort.Sort(diffList)
 
