@@ -15,6 +15,7 @@ func RegisterRouter(e *gin.Engine) {
 
 	// offline
 	e.POST("/map/add", services.AddMapHandler)
+	e.POST("/map/collect", services.CollectHandler)
 
 	// locate
 	e.POST("/locate", services.LocateHandler)

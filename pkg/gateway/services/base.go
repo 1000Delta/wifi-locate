@@ -8,3 +8,7 @@ type baseResp struct {
 func Resp(code int, msg string) baseResp {
 	return baseResp{code, msg}
 }
+
+var (
+	BaseSuccess = Resp(0, "success")
+)

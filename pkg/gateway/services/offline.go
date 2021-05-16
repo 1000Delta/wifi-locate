@@ -70,3 +70,38 @@ func AddMapHandler(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, resp)
 }
+
+type collectReq struct {
+	MapID    uint                `json:"mapID"`
+	APList   []*locate.APInfo    `json:"apList"`
+	Location locate.LocationInfo `json:"location"`
+}
+
+type collectResp struct {
+	baseResp
+}
+
+func CollectHandler(ctx *gin.Context) {
+
+	req := new(collectReq)
+	ctx.BindJSON(req)
+
+	cl, err := getClient()
+	if err != nil {
+		ctx.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+	if err := cl.Collect(
+		service.CollectReq{
+			MapID:    req.MapID,
+			APList:   req.APList,
+			Location: req.Location,
+		},
+		&service.CollectResp{},
+	); err != nil {
+		ctx.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, &collectResp{baseResp: BaseSuccess})
+}
