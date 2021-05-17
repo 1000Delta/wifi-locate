@@ -9,12 +9,16 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: ${db_name}
+    volumes: 
+      - dbdata:/var/lib/mysql
 
   locate:
     container_name: ${service_name}-locate
     build:
       context: .
       target: locate
+    volumes:
+      - ./log/locate/:/app/log/
     networks:
       - wifi-locate
     depends_on:
@@ -27,8 +31,11 @@ services:
       target: gateway
     networks:
       - wifi-locate
-    ports: 
+    ports:
       - 8080:8080
 
 networks:
   wifi-locate:
+
+volumes: 
+  dbdata:
