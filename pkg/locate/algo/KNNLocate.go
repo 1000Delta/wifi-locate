@@ -1,6 +1,7 @@
 package algo
 
 import (
+	"log"
 	"math"
 	"sort"
 
@@ -22,6 +23,8 @@ func (cfg KNNLocator) Locate(scanVec locate.APVector, vecListDB []locate.APVecto
 	// 计算欧式距离
 	for i, baseVec := range vecListDB {
 		diffList[i] = getDiff(scanVec, baseVec)
+		x, y := baseVec.GetLocation()
+		log.Println("dbvecs: ", diffList[i].EuDist, x, y)
 	}
 	sort.Sort(diffList)
 
@@ -46,7 +49,7 @@ func getDiff(baseVec, dbVec locate.APVector) *apDiff {
 	)
 	return &apDiff{
 		BaseVec: dbVec,
-		EuDist: euDist,
+		EuDist:  euDist,
 	}
 }
 
@@ -65,6 +68,7 @@ func getAvgLocation(diffList apDiffList) (float64, float64) {
 	for _, diff := range diffList {
 		x, y := diff.BaseVec.GetLocation()
 		xall, yall = xall+x, yall+y
+		log.Printf("%f %f, %f, %f", x, y, xall, yall)
 	}
 
 	// TODO 确认结果正确性，论文中多计算了一个欧氏距离

@@ -59,7 +59,9 @@ func (l *LocateService) Locate(req LocateReq, location *locate.LocationInfo) err
 
 	// 转换到算法使用的对象
 	for i, vec := range dbVecs {
-		algoVecs[i] = &vec
+		algoVecs[i] = vec
+		x, y := algoVecs[i].GetLocation()
+		log.Println(x, y)
 	}
 
 	// 调用定位算法，默认使用 KNN, k=4
